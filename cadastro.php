@@ -1,7 +1,8 @@
 <?php
-include('conexao.php'); // conexao com banco de dados
 
-//receber os dados do formulario
+include('conexao.php'); // Conexão com o banco de dados
+
+// Receber os dados do formulário
 $nome = $_POST['nome'];
 $cpf = $_POST['cpf'];
 $email = $_POST['email'];
@@ -9,24 +10,28 @@ $endereco = $_POST['endereco'];
 $senha = $_POST['senha'];
 $confirmarSenha = $_POST['confirmarSenha'];
 
-// preparar a consultar SQL
-$sql = "INSERT INTO  cadastro (nome, cpf ,email,endereco,senha,confimarSenha) VALUES (:nome, :cpf:, :endereco, :email, :senha, :confirmarSenha)";
+// Preparar a consulta SQL
+$sql = "INSERT INTO cadastro (nome, cpf, endereco, email, senha, confirmarSenha) VALUES (:nome, :cpf, :endereco, :email, :senha, :confirmarSenha)";
 
-$stmt =$conn-> prepare($sql);
+// Criar um objeto de consulta PDO
+$stmt = $conn->prepare($sql);
 
-$stmt ->bindParan(':nome', $nome);
-$stmt ->bindParan(':cpf', $cpf);
-$stmt ->bindParan(':endereco',$endereco);
-$stmt ->bindParan(':email',$email);
-$stmt ->bindParan(':senha',$senha);
-$stmt ->bindParan(':confirmarSenha',$confirmarSenha);
+// Vincular os valores aos parâmetros da consulta
+$stmt->bindParam(':nome', $nome);
+$stmt->bindParam(':cpf', $cpf);
+$stmt->bindParam(':endereco', $endereco);
+$stmt->bindParam(':email', $email);
+$stmt->bindParam(':senha', $senha);
+$stmt->bindParam(':confirmarSenha', $confirmarSenha);
 
-if($stmt->execute()){
-    echo "Usuário cadastro com sucesso";
-    header("Location: login.html");
-} else{
-    echo "Erro ao cadastrar usuário" . $conn ->errorInfo();
-
+// Executar a consulta
+if ($stmt->execute()) {
+    echo "Usuário cadastrado com sucesso!";
+    header('Location: login.html');
+} else {
+    echo "Erro ao cadastrar usuário: " . $conn->errorInfo();
 }
-$conn= null;
+
+// Fechar a conexão com o banco de dados
+$conn = null;
 ?>
